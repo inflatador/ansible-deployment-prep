@@ -1,0 +1,25 @@
+---
+
+es_instances:
+  beta_search_deployment_prep:
+      # deployment_prep prod name
+    cluster_name: beta-search
+    short_cluster_name: chi
+    http_port: 9200
+    tls_port: 9243
+
+  beta_search_omega_deployment_prep:
+      # deployment_prep prod name
+    cluster_name: beta-search-omega
+    short_cluster_name: omega
+    http_port: 9400
+    tls_port: 9443
+
+  beta_search_psi_deployment_prep:
+      # deployment_prep prod name
+    cluster_name: beta-search-psi
+    short_cluster_name: psi
+    http_port: 9600
+    tls_port: 9643
+
+upgrade_time: False

@@ -1,0 +1,44 @@
+---
+
+# - name: execute facter
+#   community.general.facter:
+
+- name: ensure tmpfiles config is present
+  copy:
+    content: |
+              d    /var/run/elasticsearch-{{ item.value.cluster_name }}   0755 elasticsearch elasticsearch - -
+    # dest: "/etc/tmpfiles.d/{{ cluster_name }}"
+    dest: "/etc/tmpfiles.d/{{ item.value.cluster_name }}.conf"
+    owner: elasticsearch
+    group: elasticsearch
+    mode: 0644
+  loop: "{{ lookup('dict', es_instances) }}"
+
+- name: configure systemd unit files per ES instance
+  template:
+    src: ../templates/elasticsearch_6@.service.j2
+    dest: "/etc/systemd/system/elasticsearch_6@{{ item.value.cluster_name }}.service"
+    owner: root
+    group: root
+    mode: 0444
+  loop: "{{ lookup('dict', es_instances) }}"
+  notify: reload systemd
+
+- name: relax elasticsearch permissions (upgrade only)
+  file:
+    path: "/etc/elasticsearch/{{ item.value.cluster_name }}"
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    mode: 0755
+  loop: "{{ lookup('dict', es_instances) }}"
+  when: upgrade_time
+
+- name: enforce elasticsearch permissions
+  file:
+    path: "/etc/elasticsearch/{{ item.value.cluster_name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop: "{{ lookup('dict', es_instances) }}"
