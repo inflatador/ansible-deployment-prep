@@ -49,7 +49,6 @@
       state: started
     loop: "{{ lookup('dict', es_instances) }}"
 
-
 - name: enforce elasticsearch permissions
   file:
     path: "/etc/elasticsearch/{{ item.value.cluster_name }}"
