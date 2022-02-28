@@ -19,7 +19,7 @@ Group=elasticsearch
 
 # Force creation of /var/run/elasticsearch (see T276198)
 #ExecStartPre=+/root/es-setup.sh
-ExecStartPre=+/bin/systemd-tmpfiles --create /usr/lib/tmpfiles.d/elasticsearch.conf
+ExecStartPre=+/bin/systemd-tmpfiles --create /etc/tmpfiles.d/%i.conf
 ExecStart=/usr/share/elasticsearch/bin/elasticsearch -p ${PID_DIR}/%i.pid --quiet
 
 # StandardOutput is configured to redirect to journalctl since
