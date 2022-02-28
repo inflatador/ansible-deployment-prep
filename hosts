@@ -1,6 +1,6 @@
 [deployment_prep]
-; deployment-elastic05.deployment-prep.eqiad.wmflabs
-; deployment-elastic06.deployment-prep.eqiad.wmflabs
+deployment-elastic05.deployment-prep.eqiad.wmflabs
+deployment-elastic06.deployment-prep.eqiad.wmflabs
 deployment-elastic07.deployment-prep.eqiad.wmflabs
 
 [dp:children]

@@ -14,6 +14,20 @@
     mode: 0644
   loop: "{{ lookup('dict', es_instances) }}"
 
+- name: ensure the default elasticsearch_6 service file is removed
+  file:
+    path: "/lib/systemd/system/elasticsearch_6@.service"
+    state: absent
+
+- name: ensure master systemd unit file is in place
+  copy:
+    src: ../templates/elasticsearch_6@.service.j2
+    dest: "/etc/systemd/system/elasticsearch_6@.service"
+    owner: root
+    group: root
+    mode: 0444
+  notify: reload systemd
+
 - name: configure systemd unit files per ES instance
   template:
     src: ../templates/elasticsearch_6@.service.j2
