@@ -24,15 +24,31 @@
   loop: "{{ lookup('dict', es_instances) }}"
   notify: reload systemd
 
-- name: relax elasticsearch permissions (upgrade only)
-  file:
-    path: "/etc/elasticsearch/{{ item.value.cluster_name }}"
-    state: directory
-    owner: elasticsearch
-    group: elasticsearch
-    mode: 0755
-  loop: "{{ lookup('dict', es_instances) }}"
+- name: upgrade elasticsearch (minor version)
   when: upgrade_time
+  block:
+
+  - name: stop elasticsearch services, if running
+    systemd:
+      name: "elasticsearch_6@{{ item.value.cluster_name }}.service"
+      state: stopped
+    loop: "{{ lookup('dict', es_instances) }}"
+
+  - name: relax elasticsearch permissions (upgrade only)
+    file:
+      path: "/etc/elasticsearch/{{ item.value.cluster_name }}"
+      state: directory
+      owner: elasticsearch
+      group: elasticsearch
+      mode: 0755
+    loop: "{{ lookup('dict', es_instances) }}"
+
+  - name: start elasticsearch services
+    systemd:
+      name: "elasticsearch_6@{{ item.value.cluster_name }}.service"
+      state: started
+    loop: "{{ lookup('dict', es_instances) }}"
+
 
 - name: enforce elasticsearch permissions
   file:
