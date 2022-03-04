@@ -1,0 +1,19 @@
+---
+
+# cluster-health.yml , checks cluster health on all
+- hosts: all
+  vars_files: roles/elastic/defaults/main.yml
+
+  tasks:
+    # - name: print the message
+    #   debug:
+    #     msg: "This is {{ item.value.cluster_name }} "
+    #   loop: "{{ lookup('dict', es_instances) }}"
+
+    - name: record main (chi) cluster health
+      command: 'curl -XGET -H "Accept:application/json" http://localhost:{{ es_instances.beta_search_deployment_prep.http_port }}/_cluster/health'
+      register: chi_response
+
+    - name: print main cluster health
+      debug:
+        msg: "Main cluster health: {{ chi_response.stdout }} "
